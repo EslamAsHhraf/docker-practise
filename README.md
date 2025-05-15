@@ -25,8 +25,8 @@ EXPOSE 4000
 # Command to run the application
 CMD ["npm", "start"]
 ```
-<img src="./assets//DockerFile.png" width="400px">
+<img src="./assets//DockerFile.png" width="600px">
 
 ## 2 <a href="https://www.youtube.com/watch?v=brdr_88m20k&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=5">Images & Containers</a>
-<img src="./assets//Images & Containers.png" width="400px">
+<img src="./assets//Images & Containers.png" width="800px">
 
