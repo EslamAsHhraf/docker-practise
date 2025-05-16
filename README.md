@@ -123,3 +123,22 @@ services:                   # Defines the services (containers) that make up you
       - "4000:4000"         # Maps port 4000 on your host to port 4000 inside the container, allowing you to access the app at localhost:4000.
 
 ```
+
+## <a href="https://www.youtube.com/watch?v=1mQ8NXcHmGk&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=10">Environment Variables</a>
+
+* `docker run --name node-app-container -v "relative-path-on-machine:/app:ro" --env PORT=4000 -d -p 4000:4000 node-app`
+This runs the container with a bind mount (read-only) and passes an environment variable PORT=4000 directly into the container.
+
+* `docker run --name node-app-container -v "relative-path-on-machine:/app:ro" --env-file ./.env -d -p 4000:4000 node-app`
+This runs the container with the same bind mount, but instead of passing individual variables, it loads all environment variables from a .env file into the container.
+
+* In a Docker Compose file, you can set environment variables like this:
+
+  ```environment:
+    - NODE_ENV=development
+    - PORT=4000
+  env_file:
+    - .env
+  ```
+
+  Here, environment sets individual environment variables, while env_file loads all variables defined inside the .env file.
