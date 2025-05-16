@@ -107,3 +107,19 @@ This means changes you make to `node_modules` on your machine won’t affect the
     `docker run --name node-app-container -v "${PWD}/src:/app/src:ro" -d -p 4000:4000 node-app`
     This way, you only sync the important code files inside /src, keeping other parts like node_modules separate and managed by the container.
 
+## 6 <a href="https://www.youtube.com/watch?v=k1Yg4UsrHqs&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=9">Docker Compose</a>
+
+```
+version: "3"                 # Specifies the version of the Docker Compose file format. Version 3 is widely used and supports most features.
+
+services:                   # Defines the services (containers) that make up your application.
+  node-app:                 # The name of the service; you can refer to it when running Docker Compose commands.
+    container_name: node-app-container  # Explicitly sets the container’s name instead of letting Docker generate a random one.
+    build: .                # Tells Docker Compose to build the Docker image using the Dockerfile in the current directory ('.').
+    volumes:                # Defines folders to mount between your host and the container for syncing files.
+      - ./src:/app/src:ro  # Mounts the local 'src' directory into '/app/src' inside the container as read-only (:ro).  
+                            # This means the container can read your source code but cannot modify it.
+    ports:                  # Maps network ports between your host machine and the container.
+      - "4000:4000"         # Maps port 4000 on your host to port 4000 inside the container, allowing you to access the app at localhost:4000.
+
+```
