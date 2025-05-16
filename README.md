@@ -89,3 +89,21 @@ Create a `nodemon.json` file in the root of your project with this content:
 ```
 
 This tells `nodemon` to **use polling** instead of relying on OS-level file events. It's a bit less efficient, but it works reliably across Docker + Windows setups.
+
+## 5 <a href="https://www.youtube.com/watch?v=voTvVHAi4fM&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=8">Docker Volumes</a>
+* `docker run --name node-app-container -v "relative-path-on-machine:/app" -d -p 4000:4000 node-app`
+This uses a bind mount, which means your local folder is mounted directly into the container at /app. Changes in either place reflect on the other.
+
+* `docker run --name node-app-container -v "relative-path-on-machine:/app:ro" -d -p 4000:4000 node-app`
+This is a read-only bind mount. The container can read the files but cannot write or delete anything inside /app. So your local files stay safe from container changes.
+
+* `docker run --name node-app-container -v "${PWD}:/app:ro" -v /app/node_modules -d -p 4000:4000 node-app`
+Here, `${PWD}:/app:ro` mounts your whole project folder read-only, and `/app/node_modules` is an anonymous volume created inside the container to hold dependencies separately.
+This means changes you make to `node_modules` on your machine won’t affect the container’s `node_modules`. But since you sync the whole project folder, this setup might not solve all syncing problems.
+
+* A better approach is to only sync the source code folder, not the whole project, for example:
+
+
+    `docker run --name node-app-container -v "${PWD}/src:/app/src:ro" -d -p 4000:4000 node-app`
+    This way, you only sync the important code files inside /src, keeping other parts like node_modules separate and managed by the container.
+
