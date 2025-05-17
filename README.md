@@ -160,3 +160,33 @@ You can keep all the common configuration (used in both development and producti
 To rebuild the Docker images and then start the containers: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build`
   This forces Docker to build fresh images before running the containers.
 
+## 12 <a href="https://www.youtube.com/watch?v=2-bbh5kmNSc&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=12">Multi-Stage Dockerfile</a>
+
+* can pass argument to docker file like
+```
+build:
+  context: .                         # Tells Docker to use the current directory (.) as the build context
+  args:                              # These are build-time arguments (used in the Dockerfile with ARG)
+    NODE_ENV: production             # We're passing a build argument named NODE_ENV with the value 'production'
+
+```
+```
+# Run a conditional npm install based on the NODE_ENV environment variable
+RUN if [ "$NODE_ENV" = "production" ]; \                  # Check if we're in production environment
+    then \                                                # If true:
+        npm install --production; \                       # Install only production dependencies (skip devDependencies)
+    else \                                                # Otherwise (e.g., development environment):
+        npm install; \                                    # Install all dependencies including devDependencies
+    fi                                                    # End of the if-else block
+```
+
+* Or , you can define multi staging in the dockerfile and pass the target from the compose file
+```
+    build:
+      context: .
+      target: production
+```
+```
+From node:20 as base
+From base as development
+```
