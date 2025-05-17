@@ -190,3 +190,7 @@ RUN if [ "$NODE_ENV" = "production" ]; \                  # Check if we're in pr
 From node:20 as base
 From base as development
 ```
+
+## 13 <a href="https://www.youtube.com/watch?v=XP98uQ_2JIQ&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=13">Docker with MongoDB & NodeJS</a>
+
+* can get network of container by `docker inspect  docker-practise-mongo-1` and can write name of container directly and map to Ip of `mongo`
