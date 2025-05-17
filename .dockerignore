@@ -3,3 +3,4 @@ Dockerfile
 .env
 /assets
 README.md
+docker-compose*

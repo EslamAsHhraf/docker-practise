@@ -124,7 +124,7 @@ services:                   # Defines the services (containers) that make up you
 
 ```
 
-## <a href="https://www.youtube.com/watch?v=1mQ8NXcHmGk&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=10">Environment Variables</a>
+## 10 <a href="https://www.youtube.com/watch?v=1mQ8NXcHmGk&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=10">Environment Variables</a>
 
 * `docker run --name node-app-container -v "relative-path-on-machine:/app:ro" --env PORT=4000 -d -p 4000:4000 node-app`
 This runs the container with a bind mount (read-only) and passes an environment variable PORT=4000 directly into the container.
@@ -142,3 +142,21 @@ This runs the container with the same bind mount, but instead of passing individ
   ```
 
   Here, environment sets individual environment variables, while env_file loads all variables defined inside the .env file.
+
+## 11 <a href="https://www.youtube.com/watch?v=sbiArlT5hG8&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=11">Docker Environments (Dev, Prod, ...)</a>
+1. Run a Specific Compose File
+  To run Docker using a specific file (for example, for development):
+  `docker-compose -f docker-compose.dev.yml up -d`
+  This command tells Docker Compose to use docker-compose.dev.yml and start the containers in the background.
+
+2. Use a Common Base File with Overrides
+You can keep all the common configuration (used in both development and production) inside the main docker-compose.yml file.
+
+    Then, you can add environment-specific configurations (like for production) in a second file and use both like this:
+    `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
+      Use the shared settings from docker-compose.yml Override or add to them using docker-compose.prod.yml. Start the containers in the background
+
+3. Rebuild Images Before Running
+To rebuild the Docker images and then start the containers: `docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build`
+  This forces Docker to build fresh images before running the containers.
+
