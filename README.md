@@ -220,3 +220,34 @@ volumes:
     depends_on:
       - mongo
 ```
+
+## 16 <a href="https://www.youtube.com/watch?v=8LGESAoR8qI&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=16">Docker with Nginx</a>
+
+*  `default.conf`
+```
+server {
+    # Listen for incoming HTTP requests on port 80 (the default HTTP port)
+    listen 80;
+
+    location / {
+        # Pass the original client IP to the backend (Node.js app)
+        proxy_set_header X-Real-IP $remote_addr;
+
+        # Add client's IP to the X-Forwarded-For header (used in proxies to track original client IP)
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Forward the original Host header (e.g., example.com) to the backend server
+        proxy_set_header Host $host;
+
+        # Custom header to identify that the request passed through this Nginx proxy
+        proxy_set_header X-Nginx-Proxy true;
+
+        # Forward the request to the backend Node.js app running at http://node-app:4000
+        proxy_pass http://node-app:4000;
+
+        # Disable automatic rewriting of the "Location" and "Refresh" headers in the response
+        proxy_redirect off;
+    }
+}
+
+```
