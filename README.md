@@ -194,3 +194,29 @@ From base as development
 ## 13 <a href="https://www.youtube.com/watch?v=XP98uQ_2JIQ&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=13">Docker with MongoDB & NodeJS</a>
 
 * can get network of container by `docker inspect  docker-practise-mongo-1` and can write name of container directly and map to Ip of `mongo`
+
+## 14 <a href="https://www.youtube.com/watch?v=dcrdobTJsLM&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=14">Docker with Mongo-Express</a>
+* sync database with the machine so when close container data still there
+```
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongo-db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      
+volumes:
+    mongo-db:
+```
+* `docker exec -it docker-practise-mongo-1 mongosh -u root -p example` go inside database
+* `docker-compose -f docker-compose.yml -f  docker-compose.dev.yml down -v` that delete volume also
+
+## 15 <a href="https://www.youtube.com/watch?v=hxCNBv0Zx48&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=15">Docker with Redis</a>
+
+* can make container depends on other container so didn't run before it
+```
+    depends_on:
+      - mongo
+```
