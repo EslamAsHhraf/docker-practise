@@ -451,3 +451,12 @@ docker exec -it container_name nslookup other_container_name
 ```bash
 docker network inspect network_name
 ```
+
+
+## 23 <a href="https://www.youtube.com/watch?v=oO9k2mj4dqE&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=23">Automate Docker Deployment</a>
+
+ Watchtower 🗼
+
+What it does: Automatically updates your containers when new versions come out
+Simple example: Your web app gets a security fix → Watchtower notices → Updates it automatically
+and pulling image when update it
