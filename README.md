@@ -251,3 +251,203 @@ server {
 }
 
 ```
+
+## 22 <a href="https://www.youtube.com/watch?v=FivUkFEfTzg&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=22">Load Balancing with Nginx</a>
+
+ <img src="./assets//Load Balancing with Nginx.png" width="600px">
+
+**Notes**
+ - you have to delete image name from docker compose file
+ - you have to delete bind mount
+
+
+### Docker Networking and DNS Resolution Guide
+
+### 🧠 Understanding the Problem: No DNS in Default `bridge`
+
+Let's say you do this:
+
+```bash
+docker run -d --name nginx nginx
+docker run -it busybox ping nginx
+```
+
+You might expect that `busybox` can just ping `nginx` using the container name.
+But instead, you get something like:
+
+```
+ping: bad address 'nginx'
+```
+
+### ❓ Why?
+
+Because the **default** `bridge` network doesn't include an embedded DNS server that maps container names to IP addresses. So even though both containers are running, they **can't resolve each other's names** unless you manually link them (a deprecated method), or unless you move to a **user-defined bridge** network.
+
+Docker's internal DNS only works for **user-defined bridge** or **overlay** networks. Not the default `bridge`.
+
+### 🛠️ Workaround: Use a Custom Bridge Network
+
+When you create your own network, Docker enables service name resolution via an internal DNS server automatically.
+
+Here's how:
+
+### ✅ Step-by-Step Example
+
+```bash
+# Create a custom bridge network
+docker network create mynet
+```
+
+This gives you:
+- A **user-defined bridge** network
+- Built-in **DNS-based name resolution** between containers
+
+Then:
+
+```bash
+# Run nginx container on 'mynet'
+docker run -d --name nginx --network mynet nginx
+```
+
+Now run a second container:
+
+```bash
+docker run -it --network mynet busybox sh
+```
+
+Inside the container:
+
+```bash
+ping nginx
+```
+
+And now it works!
+
+```
+PING nginx (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=64 time=0.062 ms
+```
+
+**🎉 Success!** The container `busybox` can resolve `nginx` using its name.
+
+### ⚙️ Why This Works
+
+When you use a **user-defined bridge** network:
+- Docker sets up an **internal DNS service** for that network
+- Each container gets registered in the DNS
+- Docker listens to container name changes and updates DNS entries live
+- The containers can resolve each other **by name**, not just by IP
+
+This mimics how containers might discover services in a real-world distributed system.
+
+### 🧪 Optional: Try With Docker Compose
+
+Docker Compose automatically creates a custom network for your services, which means DNS works out-of-the-box.
+
+Example `docker-compose.yml`:
+
+```yaml
+version: '3'
+services:
+  web:
+    image: nginx
+  app:
+    image: busybox
+    command: sh -c "ping web"
+```
+
+When you run:
+
+```bash
+docker-compose up
+```
+
+You'll see `app` successfully pinging `web`—because they're on the same custom network.
+
+### 🧩 Real-World Application
+
+Imagine you're building a microservices app with:
+- `frontend`
+- `backend`
+- `database`
+
+You want them to talk to each other like this:
+
+```
+frontend → backend → database
+```
+
+Using a **custom network** (or Docker Compose) allows you to just call:
+
+```http
+http://backend:5000
+```
+
+or
+
+```sql
+mysql -h database -u root
+```
+
+No need to worry about IPs or manual linking—**Docker DNS resolves the names automatically**.
+
+### 🚀 Summary
+
+| Feature | Default Bridge | Custom Bridge |
+|---------|---------------|---------------|
+| DNS (name → IP) | ❌ Not supported | ✅ Supported |
+| Container name resolution | ❌ Manual only | ✅ Automatic |
+| Suitable for multi-container | ❌ No | ✅ Yes |
+| Can be created via CLI/Compose | ❌ N/A | ✅ Yes |
+
+### Additional Network Commands
+
+### List Networks
+```bash
+docker network ls
+```
+
+### Inspect Network
+```bash
+docker network inspect mynet
+```
+
+### Remove Network
+```bash
+docker network rm mynet
+```
+
+### Connect Container to Network
+```bash
+docker network connect mynet container_name
+```
+
+### Disconnect Container from Network
+```bash
+docker network disconnect mynet container_name
+```
+
+## Best Practices
+
+1. **Always use custom networks** for multi-container applications
+2. **Use Docker Compose** for development environments
+3. **Name your containers meaningfully** since they become DNS hostnames
+4. **Use environment variables** for service discovery in production
+5. **Consider overlay networks** for multi-host deployments
+
+## Troubleshooting
+
+### Check Container Network Configuration
+```bash
+docker inspect container_name | grep -i network
+```
+
+### Test DNS Resolution Inside Container
+```bash
+docker exec -it container_name nslookup other_container_name
+```
+
+### View Network Configuration
+```bash
+docker network inspect network_name
+```
