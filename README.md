@@ -460,3 +460,13 @@ docker network inspect network_name
 What it does: Automatically updates your containers when new versions come out
 Simple example: Your web app gets a security fix → Watchtower notices → Updates it automatically
 and pulling image when update it
+## 25 <a href="https://www.youtube.com/watch?v=FHASChPBYkQ&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=25">Docker Orchestration</a>
+
+ <img src="./assets//Docker Orchestration.png" width="600px">
+
+## 26 <a href="https://www.youtube.com/watch?v=Vcn1hA8KKhQ&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=26">Docker Swarm</a>
+
+ <img src="./assets/Docker Swarm.png" width="600px">
+
+## 27 <a href="https://www.youtube.com/watch?v=A4PBSM3OxDk&list=PLzNfs-3kBUJnY7Cy1XovLaAkgfjim05RR&index=27">Rolling Update</a>
+ <img src="./assets/Rolling Update.png" width="600px">
